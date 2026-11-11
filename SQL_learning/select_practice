@@ -1,0 +1,252 @@
+# SELECT
+
+# Вывести всю таблицу (все поля_ все строки):
+SELECT *
+FROM users;
+
+# Явно указываем поля, которые необходимо вывести:
+SELECT id, firstname, lastname, login, email, password_hash, phone, birthday
+FROM users;
+
+SELECT id, firstname, phone
+FROM users;
+
+# Выводим пользователя по идентификатору:
+SELECT *
+FROM users
+WHERE id = 1;
+
+# Выводим первые 5 строк из таблицы:
+SELECT *
+FROM users
+LIMIT 5;
+
+# Сортируем вывод по полю email:
+SELECT *
+FROM users
+ORDER BY email;
+
+# Выводим поле firstname:
+SELECT firstname
+FROM users;
+
+# Выводим уникальные имена:
+SELECT DISTINCT firstname
+FROM users;
+
+# Выводим количество строк с указанным именем:
+SELECT count(firstname)
+FROM users;
+
+# Выводим количество строк с уникальными именами:
+SELECT count(DISTINCT firstname)
+FROM users;
+
+# Выводим общее количество строк в таблице:
+SELECT count(*)
+FROM users;
+
+
+SELECT *
+FROM users
+WHERE id = 1;
+
+SELECT *
+FROM user_settings
+WHERE user_id = 1;
+
+# LIKE
+# Команда LIKE выводит поле, где есть заданное значение:
+SELECT *
+FROM channels
+WHERE title LIKE '%sql%';
+
+# Учитываем регистр при поиске:
+SELECT *
+FROM channels
+WHERE title COLLATE utf8mb4_0900_as_cs LIKE '%sql%';
+
+# Все значения начинающиеся на букву K:
+SELECT *
+FROM users
+WHERE firstname LIKE 'K%';
+
+# Можно искать по количеству знаков в слове:
+SELECT *
+FROM users
+WHERE firstname LIKE '____';
+
+# ORDER BY
+SELECT *
+FROM private_messages
+WHERE sender_id = 1;
+
+SELECT *
+FROM private_messages
+WHERE receiver_id = 1;
+
+SELECT *
+FROM private_messages
+WHERE sender_id = 1 AND receiver_id = 2
+	OR sender_id = 2 AND receiver_id = 1
+ORDER BY created_at DESC;
+
+SELECT count(*)
+FROM private_messages
+WHERE receiver_id = 1
+	AND is_read = 0;
+
+UPDATE private_messages
+SET is_read = 1
+WHERE sender_id = 2 AND receiver_id = 1;
+
+SELECT count(*)
+FROM private_messages
+WHERE sender_id = 29 AND receiver_id = 1
+	AND is_read = 0
+ORDER BY created_at DESC;
+
+SELECT *
+FROM private_messages
+WHERE (sender_id = 1 AND receiver_id = 2
+	OR sender_id = 2 AND receiver_id = 1)
+	AND media_type = 'image';
+
+# COUNT, MIN, MAX, AVG, SUM
+
+SELECT YEAR(birthday)
+FROM users;
+
+SELECT MIN(YEAR(birthday))
+FROM users;
+
+SELECT MAX(YEAR(birthday))
+FROM users;
+
+SELECT ROUND(AVG(YEAR(birthday)))
+FROM users;
+
+SELECT SUM(amount)
+FROM sakila.payment
+WHERE customer_id = 1;
+
+SELECT
+	COUNT(*) AS cnt,
+	app_language
+FROM user_settings
+GROUP BY app_language
+ORDER BY cnt DESC;
+
+SELECT 
+	COUNT(*) AS cnt,
+	channel_id
+FROM channel_subscribers
+WHERE status = 'joined'
+GROUP BY channel_id
+ORDER BY cnt DESC
+LIMIT 1;
+
+SELECT 
+	count(*) AS cnt,
+	group_id
+FROM group_messages
+GROUP BY group_id
+HAVING cnt > 50
+ORDER BY cnt DESC;
+
+SELECT 
+	count(*) AS cnt,
+	group_id
+FROM group_messages
+# WHERE cnt > 50
+GROUP BY group_id
+HAVING cnt > 50
+ORDER BY cnt DESC;
+# LIMIT 7
+
+SELECT *
+FROM stories
+WHERE user_id IN (2, 3, 4, 5);
+# HAVING при наличии GROUP BY
+
+SELECT *
+FROM users
+WHERE phone = 0;
+
+SELECT *
+FROM users
+WHERE phone IS NULL;
+
+SELECT *
+FROM users
+WHERE phone IS NOT NULL;
+
+SELECT IF (NULL = NULL, 'TRUE', 'FALSE');
+
+SELECT IF (1 = 1, 'TRUE', 'FALSE');
+
+SELECT *
+FROM users
+ORDER BY id;
+
+SELECT *
+FROM users
+ORDER BY id
+LIMIT 5 OFFSET 20;
+
+SELECT *
+FROM users
+WHERE phone IS NOT NULL
+ORDER BY id
+LIMIT 5 OFFSET 10;
+
+SELECT *
+FROM channels;
+
+SELECT
+	is_private,
+	IF (is_private, 'private', 'public') AS publicity,
+	title
+FROM channels;
+
+SELECT
+	is_private,
+	IF (is_private, 'закрытый', 'публичный') AS publicity,
+	title
+FROM channels;
+
+SELECT
+	is_private,
+	CASE(is_private)
+		WHEN 1 THEN 'public'
+		WHEN 0 THEN 'private'
+		ELSE 'not set'
+	END AS publicity,
+	title
+FROM channels;
+
+SELECT 
+	count(*) AS cnt,
+	CASE
+		WHEN YEAR(birthday) > 1945 AND YEAR(birthday) < 1965 THEN 'baby boomer'
+		WHEN YEAR(birthday) > 1964 AND YEAR(birthday) < 1980 THEN 'generation X'
+		WHEN YEAR(birthday) > 1979 AND YEAR(birthday) < 1996 THEN 'millenial'
+		WHEN YEAR(birthday) > 1995 AND YEAR(birthday) < 2012 THEN 'generation Z'
+		WHEN YEAR(birthday) > 2011 THEN 'alpha'
+	END AS generation	
+FROM users
+GROUP BY generation
+ORDER BY MIN(YEAR(birthday));
+
+SELECT 
+	count(*) AS cnt,
+	CASE
+		WHEN YEAR(birthday) BETWEEN 1945 AND 1965 THEN 'baby boomer'
+		WHEN YEAR(birthday) BETWEEN 1966 AND 1980 THEN 'generation X'
+		WHEN YEAR(birthday) BETWEEN 1981 AND 1995 THEN 'millenial'
+		WHEN YEAR(birthday) BETWEEN 1996 AND 2011 THEN 'generation Z'
+		WHEN YEAR(birthday) > 2011 THEN 'alpha'
+	END AS generation	
+FROM users
+GROUP BY generation
+ORDER BY MIN(YEAR(birthday));
