@@ -279,6 +279,48 @@ GROUP BY channel_id
 ORDER BY cnt DESC
 LIMIT 1;
 
+# HAVING
+-- самые активные группы по количеству сообщений
+SELECT 
+    count(*) AS cnt,
+    group_id 
+FROM group_messages 
+# WHERE cnt > 50 -- не работает (ошибка)
+GROUP BY group_id 
+HAVING cnt > 50
+ORDER BY cnt DESC
+# LIMIT 5 -- не подходит (не известно количество заранее)
+
+-- все сториз
+SELECT *
+FROM stories 
+
+-- сториз указанного пользователя (одного)
+SELECT *
+FROM stories 
+WHERE user_id = 1;
+
+-- сториз нескольких пользователей (заданы множеством номеров)
+SELECT *
+FROM stories 
+WHERE user_id IN (2,3,4,5);
+
+-- то же с фильтрцией HAVING
+SELECT *
+FROM stories 
+HAVING user_id IN (2,3,4,5)
+
+-- то же, плюс сортировка
+SELECT *
+FROM stories 
+WHERE user_id IN (2,3,4,5)
+ORDER BY id;
+
+SELECT *
+FROM stories 
+having user_id IN (2,3,4,5)
+ORDER BY id;
+
 SELECT 
 	count(*) AS cnt,
 	group_id
