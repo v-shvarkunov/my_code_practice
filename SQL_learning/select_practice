@@ -156,6 +156,53 @@ WHERE (sender_id = 1 AND receiver_id = 2
 	AND media_type = 'image';
 
 # COUNT, MIN, MAX, AVG, SUM
+-- диалог между user_id = 1 и user_id = 2
+SELECT *
+FROM private_messages 
+WHERE (sender_id = 1 AND receiver_id = 2 
+    OR sender_id = 2 AND receiver_id = 1) AND media_type = 'image'
+;
+
+-- сколько у меня непрочитанных сообщений от пользователя Х
+SELECT COUNT(*)
+from private_messages 
+WHERE sender_id = 29 AND receiver_id = 1
+    AND is_read = 0;
+
+
+-- сколько у меня всего непрочитанных сообщений 
+SELECT COUNT(*)
+FROM private_messages 
+WHERE receiver_id = 1 
+    AND is_read = 0;
+
+
+-- COUNT, MIN, MAX, AVG, SUM
+-- год рождения каждого пользователя
+SELECT YEAR(birthday)
+FROM users;
+
+-- год рождения самого старшего пользователя
+SELECT MIN(YEAR(birthday))
+FROM users;
+
+-- год рождения самого младшего пользователя
+SELECT MAX(YEAR(birthday))
+FROM users;
+
+-- среднее значение года рождения
+SELECT AVG(YEAR(birthday))
+FROM users;
+
+-- округлим предыдущее значение
+SELECT ROUND(AVG(YEAR(birthday)))
+FROM users;
+
+-- сумма, потраченная на покупки покупателем номер 1
+-- запрос к БД sakila
+SELECT SUM(amount)
+FROM sakila.payment
+WHERE customer_id = 1;
 
 SELECT YEAR(birthday)
 FROM users;
