@@ -19,3 +19,14 @@ FROM passenger;
 SELECT *
 FROM trip
 WHERE town_from = 'moscow';
+
+-- Задача № 139
+-- Страна считается большой, если:
+-- её площадь составляет не менее 3 миллионов км² (3000000), или
+-- её население составляет не менее 25 миллионов человек (25000000).
+-- Напишите запрос для поиска названия (name), населения (population) и площади (area) больших стран.
+-- Поля в результирующей таблице: name population area
+SELECT name, population, area
+FROM World
+WHERE (area >= 3000000 OR population >= 25000000)
+ORDER BY area DESC;
