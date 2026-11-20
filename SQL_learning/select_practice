@@ -220,6 +220,49 @@ SELECT SUM(amount)
 FROM sakila.payment
 WHERE customer_id = 1;
 
+# GROUP BY
+-- вся таблица user_settings
+SELECT *
+FROM user_settings 
+
+-- количество пользователей, сгруппированное по языкам
+SELECT 
+    COUNT(*),
+    app_language
+FROM user_settings
+GROUP BY app_language; 
+
+-- то же, но с сортировкой по убыванию
+SELECT 
+    COUNT(*) AS cnt,
+    app_language
+FROM user_settings
+GROUP BY app_language 
+ORDER BY cnt DESC ;
+
+-- вся таблица подписчиков каналов
+SELECT *
+FROM channel_subscribers;
+
+-- самый популярный канал по кол-ву пользователей
+SELECT 
+    count(*) AS cnt,
+    channel_id 
+FROM channel_subscribers
+GROUP BY channel_id 
+ORDER BY cnt DESC 
+LIMIT 1;
+
+-- то же, но с учетом статуса подписки
+SELECT 
+    count(*) AS cnt,
+    channel_id 
+FROM channel_subscribers
+WHERE status = 'joined'
+GROUP BY channel_id 
+ORDER BY cnt DESC 
+LIMIT 1;
+
 SELECT
 	COUNT(*) AS cnt,
 	app_language
