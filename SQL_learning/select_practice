@@ -1,5 +1,4 @@
 # SELECT
-
 # Вывести всю таблицу (все поля_ все строки):
 SELECT *
 FROM users;
@@ -7,7 +6,6 @@ FROM users;
 # Явно указываем поля, которые необходимо вывести:
 SELECT id, firstname, lastname, login, email, password_hash, phone, birthday
 FROM users;
-
 SELECT id, firstname, phone
 FROM users;
 
@@ -46,7 +44,6 @@ FROM users;
 SELECT count(*)
 FROM users;
 
-
 SELECT *
 FROM users
 WHERE id = 1;
@@ -77,6 +74,52 @@ FROM users
 WHERE firstname LIKE '____';
 
 # ORDER BY
+-- личные сообщения
+SELECT *
+FROM private_messages 
+WHERE sender_id = 1;
+
+SELECT *
+FROM private_messages 
+WHERE receiver_id = 1;
+
+-- диалог между user_id = 1 и user_id = 2
+SELECT *
+FROM private_messages 
+WHERE sender_id = 1 AND receiver_id = 2 
+    OR sender_id = 2 AND receiver_id = 1
+ORDER BY created_at desc;
+
+--    непрочитанные сообщения
+
+-- добавим колонку is_read DEFAULT FALSE
+ALTER TABLE private_messages
+ADD COLUMN is_read BIT DEFAULT false NOT NULL;
+
+-- сколько у меня непрочитанных сообщений от пользователя Х
+SELECT COUNT(*)
+FROM private_messages 
+WHERE sender_id = 2 and receiver_id = 1
+    AND is_read = 0;
+
+# сколько у меня всего непрочитанных сообщений 
+SELECT COUNT(*)
+FROM private_messages 
+WHERE receiver_id = 1 
+    AND is_read = 0;
+
+-- отметим сообщения, как прочитанные
+-- эмулируем ситуацию, что пользователь прочитал определенный диалог
+UPDATE private_messages
+SET is_read = 1
+WHERE receiver_id = 1 AND sender_id = 2;
+
+# сколько у меня всего непрочитанных сообщений 
+SELECT COUNT(*)
+FROM private_messages 
+WHERE receiver_id = 1 
+    AND is_read = 0;
+
 SELECT *
 FROM private_messages
 WHERE sender_id = 1;
