@@ -425,3 +425,24 @@ SELECT
 FROM users
 GROUP BY generation
 ORDER BY MIN(YEAR(birthday));
+
+# обычный фильтр с оператором WHERE-LIKE
+SELECT *
+FROM saved_messages 
+WHERE body LIKE '%ratione%' OR body LIKE '%est%';
+
+# создание полнотекстового индекса на поле body
+CREATE FULLTEXT INDEX full_body_idx ON saved_messages(body);
+
+# полнотекстовый поиск в режиме BOOLEAN
+# + обязательное слово
+# - исключаемое слово
+SELECT *
+FROM saved_messages 
+WHERE match(body) AGAINST('+ratione +est -voluptatem' IN BOOLEAN MODE);
+
+# полнотекстовый поиск в режиме BOOLEAN
+# * заменитель любого окончания слова
+SELECT *
+FROM saved_messages 
+WHERE MATCH(body) AGAINST('+ratione +est +vol*' IN BOOLEAN MODE);
