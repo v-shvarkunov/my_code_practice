@@ -446,3 +446,31 @@ WHERE match(body) AGAINST('+ratione +est -voluptatem' IN BOOLEAN MODE);
 SELECT *
 FROM saved_messages 
 WHERE MATCH(body) AGAINST('+ratione +est +vol*' IN BOOLEAN MODE);
+
+# удалить представление с проверкой
+DROP VIEW IF EXISTS v_users_messages;
+
+# создать представление
+CREATE VIEW v_users_messages AS 
+	SELECT 
+		users.id AS uid, firstname, lastname,
+		private_messages.id AS pmid, sender_id, body, created_at
+	FROM users
+	LEFT OUTER JOIN private_messages ON users.id = private_messages.sender_id
+	ORDER BY private_messages.id
+	LIMIT 12;
+	
+# создать или изменить представление
+CREATE OR REPLACE VIEW v_users_messages AS 
+	SELECT 
+		users.id AS uid, firstname, lastname,
+		private_messages.id AS pmid, sender_id, body, created_at
+	FROM users
+	LEFT OUTER JOIN private_messages ON users.id = private_messages.sender_id
+	ORDER BY private_messages.id
+	LIMIT 12;
+	
+# вывод данных через представление	
+SELECT * 
+FROM v_users_messages
+WHERE uid = 29;	
