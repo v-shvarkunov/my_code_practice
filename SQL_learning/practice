@@ -474,3 +474,46 @@ CREATE OR REPLACE VIEW v_users_messages AS
 SELECT * 
 FROM v_users_messages
 WHERE uid = 29;	
+
+# удаление процедуры с проверкой
+DROP PROCEDURE IF EXISTS my_procedure;
+
+# установка нового разделителя команд
+DELIMITER //
+    
+# создание самой процедуры
+CREATE PROCEDURE my_procedure()
+BEGIN
+    SELECT 456;
+    SELECT 456;
+    SELECT 456;
+END//
+
+# возвращение стандартного разделителя команд
+DELIMITER ;    
+    
+# вызов процедуры    
+CALL my_procedure();
+
+##########################################################################
+
+# процедура, возвращающая указанное число случайных групп или каналов
+DROP PROCEDURE IF EXISTS telegram.random_society;
+
+DELIMITER $$
+$$
+CREATE PROCEDURE telegram.random_society(cnt int)
+BEGIN
+    SELECT id, title , invite_link , 'channel' AS community_type
+    FROM channels 
+        UNION 
+    SELECT id, title , invite_link , 'group' AS community_type
+    FROM `groups`  
+    ORDER BY rand()
+    LIMIT cnt;
+END $$
+DELIMITER ;
+
+
+# вызов процедуры
+CALL random_society(3);
