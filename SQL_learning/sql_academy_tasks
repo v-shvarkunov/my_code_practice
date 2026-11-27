@@ -40,6 +40,13 @@ FROM Company
 JOIN Trip ON Company.id = Trip.company
 WHERE Trip.plane = 'Boeing';
 
+-- Задача № 7
+-- Вывести все названия самолётов, на которых можно улететь в Москву (Moscow).
+-- Поля в результирующей таблице: plane
+SELECT DISTINCT plane
+FROM Trip
+WHERE town_to = 'moscow';
+
 -- Задача № 139
 -- Страна считается большой, если:
 -- её площадь составляет не менее 3 миллионов км² (3000000), или
