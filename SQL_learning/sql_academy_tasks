@@ -56,6 +56,14 @@ SELECT town_to, TIMEDIFF(time_in, time_out) AS flight_time
 FROM trip
 WHERE town_from = 'Paris';
 
+-- Задача № 9
+-- Какие компании организуют перелеты из Владивостока (Vladivostok)?
+-- Поля в результирующей таблице: name
+SELECT Company.name
+FROM Company
+JOIN Trip ON Company.id = Trip.company
+WHERE Trip.town_from = 'Vladivostok';
+
 -- Задача № 139
 -- Страна считается большой, если:
 -- её площадь составляет не менее 3 миллионов км² (3000000), или
